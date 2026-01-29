@@ -314,7 +314,7 @@ export default function EditProfileScreen() {
 
   return (
     <ImageBackground
-      source={require('@/assets/images/a.jpg')}
+      source={require('@/assets/images/3.jpeg')}
       style={styles.background}
       resizeMode="cover"
     >

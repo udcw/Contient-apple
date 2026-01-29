@@ -21,7 +21,7 @@ export default function VillageOptionsScreen() {
 
   const handleOptionPress = (optionId: string) => {
     if (optionId === "contact") {
-      Linking.openURL("https://wa.me/237656450667");
+      Linking.openURL("https://wa.me/237691372897");
       return;
     }
 
@@ -34,7 +34,7 @@ export default function VillageOptionsScreen() {
   return (
     <View style={{ flex: 1 }}>
       <ImageBackground
-        source={require("@/assets/images/a.jpg")}
+        source={require("@/assets/images/2.jpeg")}
         style={styles.bg}
         resizeMode="cover"
       >

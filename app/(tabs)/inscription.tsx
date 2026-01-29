@@ -25,7 +25,6 @@ export default function SignUpScreen() {
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
-  const [tribe, setTribe] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -50,7 +49,7 @@ export default function SignUpScreen() {
 
   const handleSignUp = async () => {
     // Validation des champs
-    if (!email || !password || !confirmPassword || !firstName || !lastName || !tribe || !phone) {
+    if (!email || !password || !confirmPassword || !firstName || !lastName || !phone) {
       Alert.alert('Erreur', 'Tous les champs sont obligatoires.');
       return;
     }
@@ -78,10 +77,10 @@ export default function SignUpScreen() {
     setLoading(true);
 
     try {
-      console.log('🔄 Début de l\'inscription...');
+      console.log(' Début de l\'inscription...');
 
       // ÉTAPE 1: Création du compte utilisateur dans auth.users
-      console.log('📝 Création du compte auth...');
+      console.log('Création du compte auth...');
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: email.trim().toLowerCase(),
         password: password,
@@ -90,13 +89,12 @@ export default function SignUpScreen() {
             first_name: firstName.trim(),
             last_name: lastName.trim(),
             phone: phone.trim(),
-            tribe: tribe.trim(),
           }
         }
       });
 
       if (authError) {
-        console.error('❌ Erreur auth:', authError);
+        console.error(' Erreur auth:', authError);
         if (authError.message.includes('already registered') || authError.message.includes('already exists')) {
           throw new Error('Un compte avec cet email existe déjà.');
         }
@@ -107,10 +105,10 @@ export default function SignUpScreen() {
         throw new Error('Échec de la création du compte utilisateur.');
       }
 
-      console.log('✅ Compte auth créé:', authData.user.id);
+      console.log(' Compte auth créé:', authData.user.id);
 
       // ÉTAPE 2: Tentative de création du profil
-      console.log('🔄 Tentative de création du profil...');
+      console.log(' Tentative de création du profil...');
       
       try {
         // Méthode 1: Insertion standard
@@ -120,7 +118,6 @@ export default function SignUpScreen() {
             id: authData.user.id,
             first_name: firstName.trim(),
             last_name: lastName.trim(),
-            tribe: tribe.trim(),
             phone: phone.trim(),
             email: email.trim().toLowerCase(),
             is_premium: false,
@@ -132,7 +129,7 @@ export default function SignUpScreen() {
           });
 
         if (profileError) {
-          console.warn('⚠️ Erreur insertion standard:', profileError);
+          console.warn(' Erreur insertion standard:', profileError);
           
           // Méthode 2: Upsert (meilleure chance)
           const { error: upsertError } = await supabase
@@ -141,7 +138,6 @@ export default function SignUpScreen() {
               id: authData.user.id,
               first_name: firstName.trim(),
               last_name: lastName.trim(),
-              tribe: tribe.trim(),
               phone: phone.trim(),
               email: email.trim().toLowerCase(),
               is_premium: false,
@@ -155,7 +151,7 @@ export default function SignUpScreen() {
             });
 
           if (upsertError) {
-            console.warn('⚠️ Erreur upsert:', upsertError);
+            console.warn(' Erreur upsert:', upsertError);
             
             // Méthode 3: Fonction RPC si elle existe
             try {
@@ -164,42 +160,41 @@ export default function SignUpScreen() {
                 user_email: email.trim().toLowerCase(),
                 user_first_name: firstName.trim(),
                 user_last_name: lastName.trim(),
-                user_tribe: tribe.trim(),
                 user_phone: phone.trim()
               });
 
               if (rpcError) {
-                console.warn('⚠️ Erreur RPC:', rpcError);
+                console.warn(' Erreur RPC:', rpcError);
                 // Le profil n'est pas créé, mais le compte auth existe
-                console.log('ℹ️ Compte auth créé, profil non créé (problème de contrainte)');
+                console.log('Compte auth créé, profil non créé (problème de contrainte)');
               } else {
-                console.log('✅ Profil créé via RPC');
+                console.log(' Profil créé via RPC');
               }
             } catch (rpcException) {
-              console.warn('⚠️ Exception RPC:', rpcException);
+              console.warn('Exception RPC:', rpcException);
             }
           } else {
-            console.log('✅ Profil créé via upsert');
+            console.log('Profil créé via upsert');
           }
         } else {
-          console.log('✅ Profil créé via insertion standard');
+          console.log(' Profil créé via insertion standard');
         }
       } catch (profileException: any) {
-        console.warn('⚠️ Exception création profil:', profileException);
+        console.warn('Exception création profil:', profileException);
         // On continue même si le profil n'est pas créé
       }
 
       // SUCCÈS: Le compte auth est créé, c'est le plus important
-      console.log('🎉 Inscription réussie!');
+      console.log(' Inscription réussie!');
       
       Alert.alert(
-        '✅ Inscription réussie!',
+        ' Inscription réussie!',
         'Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.',
         [
           {
             text: 'Se connecter',
             onPress: () => {
-              console.log('🔀 Redirection vers login');
+              console.log(' Redirection vers login');
               router.replace('/login');
             }
           }
@@ -207,7 +202,7 @@ export default function SignUpScreen() {
       );
 
     } catch (error: any) {
-      console.error('❌ Erreur inscription:', error);
+      console.error(' Erreur inscription:', error);
       
       let errorMessage = 'Une erreur est survenue lors de la création du compte.';
       
@@ -219,7 +214,7 @@ export default function SignUpScreen() {
         
         // Afficher un bouton pour corriger la contrainte
         Alert.alert(
-          '⚠️ Configuration requise',
+          ' Configuration requise',
           errorMessage,
           [
             { 
@@ -237,7 +232,7 @@ export default function SignUpScreen() {
         errorMessage = error.message;
       }
       
-      Alert.alert('❌ Erreur', errorMessage);
+      Alert.alert(' Erreur', errorMessage);
       
     } finally {
       setLoading(false);
@@ -246,7 +241,7 @@ export default function SignUpScreen() {
 
   return (
     <ImageBackground
-      source={require('@/assets/images/a.jpg')}
+      source={require('@/assets/images/2.jpeg')}
       style={styles.background}
       resizeMode="cover"
     >
@@ -261,7 +256,7 @@ export default function SignUpScreen() {
 >
           <View style={styles.container}>
             <Text style={styles.title}>Inscription</Text>
-            <Text style={styles.subtitle}>Rejoignez la communauté Kamerun News</Text>
+            <Text style={styles.subtitle}>Rejoignez la communauté Le Continent</Text>
 
             <View style={styles.inputRow}>
               <View style={[styles.inputGroup, { flex: 1, marginRight: 8 }]}>
@@ -287,17 +282,6 @@ export default function SignUpScreen() {
                   autoCapitalize="words"
                 />
               </View>
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Ethnie / Tribu</Text>
-              <TextInput 
-                placeholder="Votre ethnie ou tribu" 
-                value={tribe} 
-                onChangeText={setTribe} 
-                style={styles.input}
-                editable={!loading}
-              />
             </View>
 
             <View style={styles.inputGroup}>
@@ -401,13 +385,17 @@ export default function SignUpScreen() {
               </TouchableOpacity>
             </View>
 
-            <View style={styles.linkContainer}>
-              <Text style={styles.link}>
-                Déjà un compte ?{' '}
-                <Text style={styles.linkHighlight} onPress={() => !loading && router.push('/login')}>
-                  Se connecter
-                </Text>
-              </Text>
+            {/* SECTION "SE CONNECTER" AMÉLIORÉE ET PLUS VISIBLE */}
+            <View style={styles.loginSection}>
+              <Text style={styles.loginText}>Déjà un compte ?</Text>
+              <TouchableOpacity 
+                style={styles.loginButton}
+                onPress={() => !loading && router.push('/login')}
+                disabled={loading}
+              >
+                <Ionicons name="log-in-outline" size={20} color="#FFF" />
+                <Text style={styles.loginButtonText}>Se connecter</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </ScrollView>
@@ -419,13 +407,11 @@ export default function SignUpScreen() {
 const styles = StyleSheet.create({
   background: { flex: 1 },
   keyboardAvoidingView: { flex: 1 },
-scrollContainer: { 
- flexGrow: 1,
-  justifyContent: 'flex-start',
-  paddingVertical: 70,
-  // paddingBottom: 10, // espace pour le bouton
-  // paddingHorizontal: 10,
-},
+  scrollContainer: { 
+    flexGrow: 1,
+    justifyContent: 'flex-start',
+    paddingVertical: 70,
+  },
   container: {
     backgroundColor: 'rgba(255, 255, 240, 0.95)',
     marginHorizontal: 20,
@@ -534,16 +520,39 @@ scrollContainer: {
     fontWeight: '600',
     textDecorationLine: 'underline',
   },
-  linkContainer: {
-    marginTop: 20,
+  // NOUVEAUX STYLES POUR LA SECTION "SE CONNECTER"
+  loginSection: {
+    marginTop: 25,
+    paddingTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#EEE',
     alignItems: 'center',
   },
-  link: {
-    fontSize: 15,
+  loginText: {
+    fontSize: 16,
     color: '#4B0082',
+    marginBottom: 15,
+    fontWeight: '500',
   },
-  linkHighlight: {
+  loginButton: {
+    backgroundColor: '#27AE60',
+    paddingVertical: 14,
+    paddingHorizontal: 30,
+    borderRadius: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+    width: '100%',
+  },
+  loginButtonText: {
+    color: '#FFF',
     fontWeight: '700',
-    color: '#8B0000',
+    fontSize: 16,
+    marginLeft: 10,
   },
 });

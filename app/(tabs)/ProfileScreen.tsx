@@ -46,16 +46,26 @@ export default function ProfileScreen() {
   };
 
   const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      Alert.alert('Erreur', 'Erreur lors de la déconnexion');
-    } else {
-      router.replace('/login');
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        Alert.alert('Erreur', 'Erreur lors de la déconnexion');
+      }
+      // NE PAS utiliser router.replace ici
+      // La redirection sera gérée par onAuthStateChange dans le RootLayout
+    } catch (error) {
+      Alert.alert('Erreur', 'Une erreur est survenue');
     }
   };
 
   const handleEditProfile = () => {
-    router.push('/edit-profile');
+    // Assurez-vous que cette route existe
+    if (userData) {
+      router.push({
+        pathname: '/edit-profile',
+        params: { userId: userData.id }
+      });
+    }
   };
 
   return (
@@ -152,7 +162,7 @@ export default function ProfileScreen() {
             </View>
           </View>
 
-          {userData.is_premium && userData.premium_activated_at && (
+          {userData.is_premium && userData.last_payment_date && (
             <>
               <View style={styles.separator} />
               <View style={styles.infoRow}>
@@ -160,7 +170,7 @@ export default function ProfileScreen() {
                 <View style={styles.infoContent}>
                   <Text style={styles.label}>Premium depuis</Text>
                   <Text style={styles.value}>
-                    {new Date(userData.premium_activated_at).toLocaleDateString('fr-FR')}
+                    {new Date(userData.last_payment_date).toLocaleDateString('fr-FR')}
                   </Text>
                 </View>
               </View>

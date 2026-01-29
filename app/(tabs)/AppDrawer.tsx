@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Text, View } from 'react-native';
 import { supabase } from '../../lib/supabase';
 import HomeScreen from './home';
-import SettingsScreen from './ProfileScreen';
+import ProfileScreen from './ProfileScreen';
 
 const Drawer = createDrawerNavigator();
 
-export default function AppDrawer({ navigation }: any) {
+export default function AppDrawer() {
   const [userName, setUserName] = useState<string>('');
 
   useEffect(() => {
@@ -33,9 +33,9 @@ export default function AppDrawer({ navigation }: any) {
       const { error } = await supabase.auth.signOut();
       if (error) {
         Alert.alert('Erreur', error.message);
-      } else {
-        navigation.replace('login');
       }
+      // NE PAS utiliser navigation.replace ici
+      // La redirection sera gérée par onAuthStateChange dans le RootLayout
     } catch (error: any) {
       Alert.alert('Erreur', error.message);
     }
@@ -85,13 +85,20 @@ export default function AppDrawer({ navigation }: any) {
                 fontSize: 16,
               }}
             >
-              {userName ? userName : ''}
+              {userName ? `Bonjour, ${userName}` : ''}
             </Text>
           ),
         }}
       />
-      <Drawer.Screen name="Profile" component={SettingsScreen} />
-      {/* <Drawer.Screen name="Settings" component={SettingsScreen} /> */}
+      <Drawer.Screen 
+        name="Profile" 
+        component={ProfileScreen}
+        options={{
+          title: 'Mon Profil',
+          headerStyle: { backgroundColor: '#FF8C00' },
+          headerTintColor: '#FFF',
+        }}
+      />
     </Drawer.Navigator>
   );
 }

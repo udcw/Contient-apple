@@ -1,55 +1,32 @@
-import ListItem from '@/components/molecules/ListItem';
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import React from 'react';
-import { Dimensions, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import ListItem from "@/components/molecules/ListItem";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import React from "react";
+import {
+  Dimensions,
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import { supabase } from "@/lib/supabase";
 import { useEffect, useState } from "react";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Image } from "react-native";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
-const culturesData = [
-  {
-    id: '1',
-    name: 'Grand Nord',
-    description: 'Culture et traditions des peuples du Nord',
-    color: '#D35400',
-    route: '/grand-nord',
-    icon: 'sunny',
-  },
-  {
-    id: '2',
-    name: 'Grand Sud',
-    description: 'Héritage culturel des régions du Sud',
-    color: '#27AE60',
-    route: '/grand-sud',
-    icon: 'leaf',
-  },
-  {
-    id: '3',
-    name: 'Grass Field',
-    description: 'Royaumes et chefferies de l\'Ouest',
-    color: '#2980B9',
-    route: '/grass-field',
-    icon: 'business',
-  },
-  {
-    id: '4',
-    name: 'Sawa',
-    description: 'Culture côtière et traditions maritimes',
-    color: '#8E44AD',
-    route: '/sawa',
-    icon: 'water',
-  },
-];
+// Import de l'image locale
+import drapeauImage from '@/assets/images/drapeau.png';
+
 
 const villages = [
   {
     id: "1",
     name: "Bafoussam",
-    desc: "Capitale de la région de l’Ouest.",
+    desc: "Capitale de la région de l'Ouest.",
     image: "https://picsum.photos/200",
   },
   {
@@ -61,7 +38,7 @@ const villages = [
   {
     id: "10",
     name: "Fufulde",
-    desc: "Capitale de la région de l’Ouest.",
+    desc: "Capitale de la région de l'Ouest.",
     image: "https://picsum.photos/200",
   },
   {
@@ -73,7 +50,7 @@ const villages = [
   {
     id: "4",
     name: "Ewondo",
-    desc: "Capitale de la région de l’Ouest.",
+    desc: "Capitale de la région de l'Ouest.",
     image: "https://picsum.photos/200",
   },
   {
@@ -85,7 +62,7 @@ const villages = [
   {
     id: "6",
     name: "Douala",
-    desc: "Capitale de la région de l’Ouest.",
+    desc: "Capitale de la région de l'Ouest.",
     image: "https://picsum.photos/200",
   },
   {
@@ -97,7 +74,7 @@ const villages = [
   {
     id: "db8b0445-98c6-4a8c-a0f0-d939b761b5a7",
     name: "Bandjoun",
-    desc: "Capitale de la région de l’Ouest.",
+    desc: "Capitale de la région de l'Ouest.",
     image: "https://picsum.photos/200",
   },
   {
@@ -130,7 +107,7 @@ export default function CulturesPremiumScreen() {
         .order("name", { ascending: true });
 
       if (error) {
-        console.log("❌ Erreur villages:", error);
+        console.log("Erreur villages:", error);
       } else {
         setVillagesData(data);
       }
@@ -141,16 +118,48 @@ export default function CulturesPremiumScreen() {
     fetchVillages();
   }, []);
 
+  // Convertir l'image locale en URI si nécessaire
+  const getDrapeauUri = () => {
+    try {
+      // Si drapeauImage est déjà une URI (string), on la retourne
+      if (typeof drapeauImage === 'string') {
+        return drapeauImage;
+      }
+      
+      // Si c'est un require (nombre), on utilise resolveAssetSource
+      if (typeof drapeauImage === 'number') {
+        const resolvedSource = Image.resolveAssetSource(drapeauImage);
+        return resolvedSource.uri;
+      }
+      
+      // Si c'est un objet avec une propriété uri
+      if (drapeauImage && typeof drapeauImage === 'object' && drapeauImage.uri) {
+        return drapeauImage.uri;
+      }
+      
+      // Par défaut, retourner une image de drapeau en ligne
+      return "https://upload.wikimedia.org/wikipedia/commons/4/4f/Flag_of_Cameroon.svg";
+    } catch (error) {
+      console.error("Erreur lors du chargement de l'image du drapeau:", error);
+      return "https://upload.wikimedia.org/wikipedia/commons/4/4f/Flag_of_Cameroon.svg";
+    }
+  };
+
+  const drapeauUri = getDrapeauUri();
+
   return (
     <ImageBackground
-      source={require('@/assets/images/a.jpg')}
+      source={require("@/assets/images/2.jpeg")}
       style={styles.background}
       resizeMode="cover"
     >
       <ScrollView style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+          >
             <Ionicons name="arrow-back" size={24} color="#FFF" />
           </TouchableOpacity>
           <View>
@@ -164,116 +173,52 @@ export default function CulturesPremiumScreen() {
 
         {/* Welcome Message */}
         <View style={styles.welcomeSection}>
-          <Text style={styles.welcomeTitle}>Bienvenue dans l'espace Premium!</Text>
+          <Text style={styles.welcomeTitle}>
+            Bienvenue dans l'espace Premium!
+          </Text>
           <Text style={styles.welcomeText}>
-            Vous avez maintenant accès à toutes les cultures du Cameroun avec des contenus exclusifs et détaillés.
+            Vous avez maintenant accès à toutes les cultures du Cameroun avec
+            des contenus exclusifs et détaillés.
           </Text>
         </View>
 
-        {/* Cultures Grid */}
-        {/* 
-          <View style={styles.culturesSection}>
-            <Text style={styles.sectionTitle}>Grandes Cultures du Cameroun</Text>
-            <View style={styles.culturesGrid}>
-              {culturesData.map((culture) => (
-                <TouchableOpacity
-                  key={culture.id}
-                  style={[styles.cultureCard, { backgroundColor: culture.color }]}
-                  onPress={() => router.push(culture.route as any)}
-                >
-                  <View style={styles.cultureIcon}>
-                    <Ionicons name={culture.icon as any} size={32} color="#FFF" />
-                  </View>
-                  <Text style={styles.cultureName}>{culture.name}</Text>
-                  <Text style={styles.cultureDescription}>{culture.description}</Text>
-                  <View style={styles.cultureArrow}>
-                    <Ionicons name="arrow-forward" size={20} color="#FFF" />
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-         */}
+        {/* Villages List */}
+        <View style={{ padding: 16 }}>
+          {loading && (
+            <ActivityIndicator
+              size="large"
+              color="#8B0000"
+              style={{ marginTop: 30 }}
+            />
+          )}
 
-         {/* Test des listes des tribues */}
-         <View style={{ padding: 16 }}>
-  {loading && (
-    <ActivityIndicator size="large" color="#8B0000" style={{ marginTop: 30 }} />
-  )}
+          {!loading && villagesData.length === 0 && (
+            <Text style={{ textAlign: "center", color: "#FFF", marginTop: 20 }}>
+              Aucun village trouvé.
+            </Text>
+          )}
 
-  {!loading && villagesData.length === 0 && (
-    <Text style={{ textAlign: "center", color: "#FFF", marginTop: 20 }}>
-      Aucun village trouvé.
-    </Text>
-  )}
-
-  {!loading &&
-    villagesData.map((item) => (
-      <ListItem
-        key={item.id}
-        title={item.name}
-        subtitle={item.region}
-        image={item.image_url || "https://picsum.photos/200"}
-        onPress={() =>
-          router.push({
-            pathname: "/village-options",
-            params: { village: JSON.stringify(item) }
-          })
-        }
-      />
-    ))}
-</View>
-
-        
-        <View style={styles.culturesSection}>
-          <Text style={styles.sectionTitle}>Grandes Cultures du Cameroun</Text>
-          <View style={styles.culturesGrid}>
-            {culturesData.map((culture) => (
-              <TouchableOpacity
-                key={culture.id}
-                style={[styles.cultureCard, { backgroundColor: culture.color }]}
-                onPress={() => router.push(culture.route as any)}
-              >
-                <View style={styles.cultureIcon}>
-                  <Ionicons name={culture.icon as any} size={32} color="#FFF" />
-                </View>
-                <Text style={styles.cultureName}>{culture.name}</Text>
-                <Text style={styles.cultureDescription}>{culture.description}</Text>
-                <View style={styles.cultureArrow}>
-                  <Ionicons name="arrow-forward" size={20} color="#FFF" />
-                </View>
-              </TouchableOpacity>
+          {!loading &&
+            villagesData.map((item) => (
+              <ListItem
+                key={item.id}
+                title={item.name}
+                subtitle={item.region}
+                // Utiliser l'URI du drapeau local
+                image={drapeauUri}
+                onPress={() =>
+                  router.push({
+                    pathname: "/village-options",
+                    params: { village: JSON.stringify(item) },
+                  })
+                }
+              />
             ))}
-          </View>
         </View>
 
-        {/* Additional Premium Features */}
-        <View style={styles.featuresSection}>
-          <Text style={styles.sectionTitle}>Contenus Exclusifs</Text>
-          <View style={styles.featuresGrid}>
-            <View style={styles.featureCard}>
-              <Ionicons name="images" size={30} color="#8B0000" />
-              <Text style={styles.featureCardTitle}>Galerie Photo</Text>
-              <Text style={styles.featureCardText}>+100 photos exclusives</Text>
-            </View>
-            <View style={styles.featureCard}>
-              <Ionicons name="videocam" size={30} color="#8B0000" />
-              <Text style={styles.featureCardTitle}>Vidéos</Text>
-              <Text style={styles.featureCardText}>Cérémonies traditionnelles</Text>
-            </View>
-            <View style={styles.featureCard}>
-              <Ionicons name="musical-notes" size={30} color="#8B0000" />
-              <Text style={styles.featureCardTitle}>Musiques</Text>
-              <Text style={styles.featureCardText}>Rythmes authentiques</Text>
-            </View>
-            <View style={styles.featureCard}>
-              <Ionicons name="document-text" size={30} color="#8B0000" />
-              <Text style={styles.featureCardTitle}>Documents</Text>
-              <Text style={styles.featureCardText}>Textes historiques</Text>
-            </View>
-          </View>
-        </View>
-
+        {/* Cultures Grid */}
+       
+    
       </ScrollView>
     </ImageBackground>
   );
@@ -287,39 +232,39 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    backgroundColor: 'rgba(139, 0, 0, 0.95)',
+    backgroundColor: "rgba(139, 0, 0, 0.95)",
     padding: 20,
     paddingTop: 60,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   backButton: {
     padding: 5,
   },
   title: {
     fontSize: 24,
-    fontWeight: '700',
-    color: '#FFF',
-    textAlign: 'center',
+    fontWeight: "700",
+    color: "#FFF",
+    textAlign: "center",
   },
   subtitle: {
     fontSize: 14,
-    color: '#FFD700',
-    textAlign: 'center',
-    fontWeight: '600',
+    color: "#FFD700",
+    textAlign: "center",
+    fontWeight: "600",
   },
   premiumBadge: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
     padding: 10,
     borderRadius: 50,
   },
   welcomeSection: {
-    backgroundColor: 'rgba(255, 255, 240, 0.95)',
+    backgroundColor: "rgba(255, 255, 240, 0.95)",
     margin: 20,
     padding: 20,
     borderRadius: 15,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
@@ -327,15 +272,15 @@ const styles = StyleSheet.create({
   },
   welcomeTitle: {
     fontSize: 20,
-    fontWeight: '700',
-    color: '#27AE60',
+    fontWeight: "700",
+    color: "#27AE60",
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
   welcomeText: {
     fontSize: 16,
-    color: '#333',
-    textAlign: 'center',
+    color: "#333",
+    textAlign: "center",
     lineHeight: 22,
   },
   culturesSection: {
@@ -344,15 +289,15 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 22,
-    fontWeight: '700',
-    color: '#8B0000',
+    fontWeight: "700",
+    color: "#8B0000",
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   culturesGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
     gap: 15,
   },
   cultureCard: {
@@ -360,70 +305,34 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 20,
     minHeight: 180,
-    justifyContent: 'space-between',
-    shadowColor: '#000',
+    justifyContent: "space-between",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
-    position: 'relative',
+    position: "relative",
   },
   cultureIcon: {
     marginBottom: 10,
   },
   cultureName: {
     fontSize: 18,
-    fontWeight: '700',
-    color: '#FFF',
+    fontWeight: "700",
+    color: "#FFF",
     marginBottom: 8,
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowColor: "rgba(0, 0, 0, 0.3)",
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
   },
   cultureDescription: {
     fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: "rgba(255, 255, 255, 0.9)",
     lineHeight: 16,
   },
   cultureArrow: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 15,
     right: 15,
-  },
-  featuresSection: {
-    padding: 20,
-    paddingTop: 0,
-  },
-  featuresGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    gap: 15,
-  },
-  featureCard: {
-    width: (width - 70) / 2,
-    backgroundColor: 'rgba(255, 255, 240, 0.95)',
-    borderRadius: 15,
-    padding: 20,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-  featureCardTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#8B0000',
-    marginTop: 10,
-    marginBottom: 5,
-    textAlign: 'center',
-  },
-  featureCardText: {
-    fontSize: 12,
-    color: '#333',
-    textAlign: 'center',
-    lineHeight: 16,
   },
 });

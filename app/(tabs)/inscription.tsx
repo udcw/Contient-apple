@@ -380,8 +380,8 @@ export default function SignUpScreen() {
               <Text style={styles.helpText}>
                 En cas de problème technique, contactez le support.
               </Text>
-              <TouchableOpacity onPress={fixForeignKeyConstraint}>
-                <Text style={styles.helpLink}>Voir les instructions techniques</Text>
+              <TouchableOpacity >
+                <Text >Voir les instructions techniques</Text>
               </TouchableOpacity>
             </View>
 

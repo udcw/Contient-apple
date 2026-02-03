@@ -200,16 +200,30 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: "center",
   },
-  linkHighlightStrong: {
-  fontSize: 16,
+ linkHighlightStrong: {
+  fontSize: 17,
   fontWeight: "900",
-  color: "#8B0000",
-  textDecorationLine: "underline",
+  color: "#FFF",
 
-  backgroundColor: "rgba(13, 13, 65, 0.08)",
-  paddingHorizontal: 10,
-  paddingVertical: 4,
-  borderRadius: 8,
+  backgroundColor: "#8B0000",
+
+  paddingHorizontal: 18,
+  paddingVertical: 8,
+
+  borderRadius: 20,
+
+  overflow: "hidden",
+
+  // Ombre Android
+  elevation: 6,
+
+  // Ombre iOS
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 3 },
+  shadowOpacity: 0.3,
+  shadowRadius: 4,
+
+  textAlign: "center",
 },
 
   title: {

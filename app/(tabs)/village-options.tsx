@@ -12,11 +12,12 @@ export default function VillageOptionsScreen() {
   const router = useRouter();
   const options = [
     { id: "proverbes", label: "Proverbes", icon: "chatbox-ellipses-outline" },
-    { id: "lexique",     label: "Lexique", icon: "book-outline" },
-    { id: "histoire",    label: "Histoire", icon: "time-outline" },
-    { id: "mets",        label: "Mets", icon: "restaurant-outline" },
-    { id: "alphabet",    label: "Alphabet", icon: "text-outline" },
-    { id: "contact",     label: "Nous contacter", icon: "logo-whatsapp" },
+    { id: "lexique", label: "Lexique", icon: "book-outline" },
+    { id: "histoire", label: "Histoire", icon: "time-outline" },
+    { id: "mets", label: "Mets", icon: "restaurant-outline" },
+    { id: "alphabet", label: "Alphabet", icon: "text-outline" },
+    { id: "phrases", label: "Phrases courantes", icon: "chatbubble-outline" }, // Nouvel onglet
+    { id: "contact", label: "Nous contacter", icon: "logo-whatsapp" },
   ];
 
   const handleOptionPress = (optionId: string) => {

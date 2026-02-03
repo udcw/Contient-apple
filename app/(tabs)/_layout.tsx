@@ -10,7 +10,8 @@ export default function RootLayout() {
       if (session) {
         router.replace('/(tabs)/AppDrawer'); // utilisateur connecté
       } else {
-        router.replace('/login'); // utilisateur non connecté
+        // router.replace('/login');  // utilisateur non connecté
+        router.replace('/inscription')
       }
     });
 

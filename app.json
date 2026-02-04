@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Continent",
+    "name": "Le Contenent",
     "slug": "continent-news",
     "version": "2.1.0",
     "orientation": "portrait",
@@ -26,6 +26,7 @@
 
     "android": {
       "package": "com.wcucw.continentnews",
+      "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/continent_logo.jpg",
         "backgroundColor": "#E6F4FE"

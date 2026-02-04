@@ -69,8 +69,8 @@ export default function RootLayout() {
         <Stack.Screen name="(intro)" />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-        <Stack.Screen name="inscription" />
-        <Stack.Screen name="login" />
+        {/* <Stack.Screen name="inscription" /> */}
+        {/* <Stack.Screen name="login" /> */}
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

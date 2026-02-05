@@ -11,21 +11,20 @@ import {
   TouchableOpacity,
   View,
   ActivityIndicator,
-  Image,
 } from "react-native";
 
 import { supabase } from "@/lib/supabase";
 
 const { width } = Dimensions.get("window");
 
-// Import de l'image locale
-import drapeauImage from '@/assets/images/drapeau.png';
-
 export default function CulturesPremiumScreen() {
   const router = useRouter();
 
   const [villagesData, setVillagesData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // URL du drapeau du Cameroun en ligne
+  const DRAPEAU_URI = "https://flagcdn.com/w320/cm.png";
 
   useEffect(() => {
     const fetchVillages = async () => {
@@ -48,24 +47,9 @@ export default function CulturesPremiumScreen() {
     fetchVillages();
   }, []);
 
-  // Convertir l'image locale en URI
-  const getDrapeauUri = () => {
-    try {
-      if (typeof drapeauImage === 'string') return drapeauImage;
-      if (typeof drapeauImage === 'number') {
-        return Image.resolveAssetSource(drapeauImage).uri;
-      }
-      return "https://upload.wikimedia.org/wikipedia/commons/4/4f/Flag_of_Cameroon.svg";
-    } catch (error) {
-      return "https://upload.wikimedia.org/wikipedia/commons/4/4f/Flag_of_Cameroon.svg";
-    }
-  };
-
-  const drapeauUri = getDrapeauUri();
-
   return (
     <ImageBackground
-      source={require("@/assets/images/2.jpeg")}
+      source={require("@/assets/images/1.jpeg")}
       style={styles.background}
       resizeMode="cover"
     >
@@ -110,8 +94,8 @@ export default function CulturesPremiumScreen() {
               <ListItem
                 key={item.id}
                 title={item.name}
-                subtitle={item.region}
-                image={drapeauUri}
+                subtitle={`Village - ${item.region}`} // Ajout du préfixe "Village"
+                image={DRAPEAU_URI}
                 onPress={() =>
                   router.push({
                     pathname: "/village-options",
@@ -121,15 +105,18 @@ export default function CulturesPremiumScreen() {
               />
             ))}
 
-          {/* --- ONGLET LIVRES (TOUJOURS À LA FIN) --- */}
+          {/* --- ONGLET LIVRES AVEC TITRE DIFFÉRENT --- */}
           {!loading && (
-            <ListItem
-              key="fixed-books-tab"
-              title="Bibliothèque & Livres"
-              subtitle="Archives et documents PDF"
-              image={require("@/assets/images/drapeau.png")}
-              onPress={() => router.push("/livres-screen")} // Assure-toi que cette route existe
-            />
+            <View style={styles.livresSection}>
+              <Text style={styles.sectionTitle}>Ressources</Text>
+              <ListItem
+                key="fixed-books-tab"
+                title="📚 Bibliothèque & Livres"
+                subtitle="Documents PDF, archives historiques"
+                image={DRAPEAU_URI}
+                onPress={() => router.push("/livres-screen")}
+              />
+            </View>
           )}
         </View>
       </ScrollView>
@@ -161,4 +148,18 @@ const styles = StyleSheet.create({
   },
   welcomeTitle: { fontSize: 20, fontWeight: "700", color: "#27AE60", marginBottom: 10, textAlign: "center" },
   welcomeText: { fontSize: 16, color: "#333", textAlign: "center", lineHeight: 22 },
+  livresSection: {
+    marginTop: 30,
+    paddingTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255, 255, 255, 0.3)",
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#FFF",
+    marginBottom: 15,
+    marginLeft: 10,
+    textTransform: "uppercase",
+  },
 });
